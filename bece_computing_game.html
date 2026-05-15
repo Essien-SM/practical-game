@@ -34,69 +34,68 @@
 *{box-sizing:border-box;}
 body{
   font-family:'Nunito',sans-serif;background:var(--body-bg);color:var(--text);
-  min-height:100vh;padding-bottom:2rem;
+  min-height:100vh;padding-bottom:.5rem;
 }
 
-/* ===== HERO HEADER ===== */
+/* ===== HERO HEADER — slim bar ===== */
 #hero{
   background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,#1e4d8c 100%);
-  padding:2rem 1rem 3.5rem;text-align:center;position:relative;overflow:hidden;
+  padding:.35rem 1rem;text-align:center;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
 }
 #hero::before{
   content:'';position:absolute;inset:0;
   background:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 30px);
 }
 #hero h1{
-  font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,4vw,2rem);
+  font-family:'Orbitron',sans-serif;font-size:.78rem;
   color:#fff;font-weight:900;letter-spacing:.04em;position:relative;
+  margin:0;white-space:nowrap;
 }
-#hero p{color:var(--gold2);font-size:.95rem;font-weight:700;margin-top:.25rem;position:relative;}
-.badge-pill{
-  display:inline-block;background:var(--gold);color:var(--navy);
-  font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:20px;margin:.5rem .2rem 0;
-}
+#hero p{color:var(--gold2);font-size:.7rem;font-weight:700;margin:0;position:relative;white-space:nowrap;}
+.badge-pill{display:none;}/* hide badges in slim mode */
 
 /* ===== PROGRESS STRIP ===== */
 #progress-strip{
-  background:var(--navy);padding:.75rem 1rem;
-  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
-  position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25);
+  background:var(--navy);padding:.35rem .75rem;
+  display:flex;align-items:center;gap:.6rem;
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);
 }
-#prog-bar-wrap{flex:1;background:rgba(255,255,255,.15);border-radius:20px;height:10px;min-width:80px;}
-#prog-bar-fill{height:10px;border-radius:20px;background:linear-gradient(90deg,var(--teal2),var(--gold));transition:width .5s ease;}
-#prog-label{color:#fff;font-size:.78rem;font-weight:700;white-space:nowrap;}
+#prog-bar-wrap{flex:1;background:rgba(255,255,255,.15);border-radius:20px;height:7px;min-width:60px;}
+#prog-bar-fill{height:7px;border-radius:20px;background:linear-gradient(90deg,var(--teal2),var(--gold));transition:width .5s ease;}
+#prog-label{color:#fff;font-size:.7rem;font-weight:700;white-space:nowrap;}
 #score-badge{
   background:var(--gold);color:var(--navy);font-weight:800;
-  font-size:.82rem;padding:4px 14px;border-radius:20px;white-space:nowrap;
+  font-size:.72rem;padding:2px 10px;border-radius:20px;white-space:nowrap;
 }
 
 /* ===== MAIN CARD ===== */
-#main-wrap{max-width:780px;margin:0 auto;padding:1.5rem 1rem 0;}
+#main-wrap{max-width:780px;margin:0 auto;padding:.4rem .4rem 0;}
 #game-card{
   background:var(--card-bg);border-radius:var(--radius);
   box-shadow:var(--shadow);overflow:hidden;
 }
 #card-header{
   background:linear-gradient(90deg,var(--navy2),#1e4d8c);
-  padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem;
+  padding:.4rem .75rem;display:flex;align-items:center;gap:.5rem;
 }
 #round-type-pill{
-  background:var(--gold);color:var(--navy);font-size:.65rem;font-weight:800;
-  padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;
+  background:var(--gold);color:var(--navy);font-size:.58rem;font-weight:800;
+  padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;
 }
-#round-title-text{color:#fff;font-weight:800;font-size:1rem;flex:1;}
-#round-num-badge{color:var(--gold2);font-size:.78rem;font-weight:700;white-space:nowrap;}
-#card-body{padding:1.25rem;}
+#round-title-text{color:#fff;font-weight:800;font-size:.82rem;flex:1;}
+#round-num-badge{color:var(--gold2);font-size:.7rem;font-weight:700;white-space:nowrap;}
+#card-body{padding:.5rem .5rem .4rem;}
 #round-instructions{
-  background:var(--sky);border-left:4px solid var(--teal2);
-  border-radius:0 8px 8px 0;padding:.6rem 1rem;font-size:.82rem;
-  color:#0369a1;font-weight:600;margin-bottom:1.1rem;
+  background:var(--sky);border-left:3px solid var(--teal2);
+  border-radius:0 6px 6px 0;padding:.25rem .6rem;font-size:.72rem;
+  color:#0369a1;font-weight:600;margin-bottom:.4rem;
 }
 
 /* ===== FEEDBACK ===== */
 #feedback{
-  border-radius:10px;padding:.7rem 1rem;font-size:.85rem;font-weight:700;
-  text-align:center;display:none;margin:.75rem 0;
+  border-radius:8px;padding:.4rem .75rem;font-size:.78rem;font-weight:700;
+  text-align:center;display:none;margin:.4rem 0;
   animation:fadeSlide .3s ease;
 }
 @keyframes fadeSlide{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
@@ -107,13 +106,13 @@ body{
 /* ===== ACTION BUTTONS ===== */
 .btn-check-ans{
   background:var(--navy2);color:#fff;border:none;
-  font-weight:800;font-size:.85rem;padding:.55rem 1.5rem;border-radius:10px;
+  font-weight:800;font-size:.78rem;padding:.4rem 1.2rem;border-radius:8px;
   transition:all .15s;
 }
 .btn-check-ans:hover{background:var(--navy);transform:translateY(-1px);}
 .btn-next-round{
   background:var(--gold);color:var(--navy);border:none;
-  font-weight:800;font-size:.85rem;padding:.55rem 1.5rem;border-radius:10px;
+  font-weight:800;font-size:.78rem;padding:.4rem 1.2rem;border-radius:8px;
   transition:all .15s;display:none;
 }
 .btn-next-round:hover{background:var(--gold2);}
@@ -121,7 +120,7 @@ body{
 /* ===== DIAGRAM / LABEL GAME ===== */
 #diagram-wrap{
   position:relative;background:#f8fafc;border:1.5px solid var(--border);
-  border-radius:10px;overflow:hidden;margin-bottom:.9rem;
+  border-radius:10px;overflow:visible;margin-bottom:.6rem;
 }
 #diagram-wrap svg{display:block;width:100%;height:auto;}
 .drop-zone{
@@ -138,15 +137,25 @@ body{
 .drop-zone.correct-ans{border-color:var(--green)!important;background:#dcfce7!important;color:#15803d!important;border-style:solid!important;}
 .drop-zone.wrong-ans{border-color:var(--red)!important;background:#fee2e2!important;color:#b91c1c!important;border-style:solid!important;}
 #label-pool{
-  display:flex;flex-wrap:wrap;gap:.4rem;
-  background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:.6rem .75rem;
+  background:#1a3a5c;border:1.5px solid var(--border);border-radius:10px;
+  padding:.4rem .6rem;
 }
-#label-pool-title{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+#label-pool-title{font-size:.65rem;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem;}
+#chips-row{
+  display:flex;flex-wrap:nowrap;gap:.4rem;
+  overflow-x:auto;padding-bottom:.3rem;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:#334d6e transparent;
+}
+#chips-row::-webkit-scrollbar{height:4px;}
+#chips-row::-webkit-scrollbar-track{background:transparent;}
+#chips-row::-webkit-scrollbar-thumb{background:#334d6e;border-radius:4px;}
 .drag-label{
-  background:var(--navy2);color:#fff;border-radius:7px;
-  font-size:.7rem;font-weight:700;padding:5px 10px;
-  cursor:grab;user-select:none;border:1.5px solid rgba(255,255,255,.15);
+  background:var(--navy);color:#fff;border-radius:7px;
+  font-size:.7rem;font-weight:700;padding:5px 12px;
+  cursor:grab;user-select:none;border:1.5px solid rgba(255,255,255,.2);
   transition:opacity .15s,transform .1s;
+  flex-shrink:0;white-space:nowrap;
 }
 .drag-label:active{cursor:grabbing;opacity:.75;transform:scale(.97);}
 .drag-label.used{opacity:.25;cursor:not-allowed;pointer-events:none;}
@@ -212,14 +221,8 @@ body{
 
 <!-- HERO -->
 <div id="hero">
-  <h1><i class="bi bi-cpu-fill me-2"></i>BECE Practical Game</h1>
-  <p>Basic 7 Computing — NaCCA Curriculum</p>
-  <div>
-    <span class="badge-pill">Label Diagrams</span>
-    <span class="badge-pill">Arrange Steps</span>
-    <span class="badge-pill">8 Rounds</span>
-    <span class="badge-pill">80 Points</span>
-  </div>
+  <h1><i class="bi bi-cpu-fill me-1"></i>BECE Practical Game</h1>
+  <p>Basic 7 · NaCCA</p>
 </div>
 
 <!-- PROGRESS STRIP -->
@@ -243,7 +246,7 @@ body{
       <div id="round-instructions"></div>
       <div id="round-content"></div>
       <div id="feedback"></div>
-      <div class="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+      <div class="d-flex gap-2 justify-content-center mt-2 flex-wrap">
         <button class="btn-check-ans" id="btn-check" onclick="checkAnswer()">
           <i class="bi bi-check2-circle me-1"></i>Check Answer
         </button>
@@ -604,8 +607,8 @@ function renderLabelRound(r){
   content.innerHTML=`
     <div id="diagram-wrap">${r.svg}</div>
     <div id="label-pool">
-      <div id="label-pool-title"><i class="bi bi-tags-fill me-1"></i>Label chips — drag to diagram</div>
-      <div id="chips-row" style="display:flex;flex-wrap:wrap;gap:.4rem;"></div>
+      <div id="label-pool-title"><i class="bi bi-tags-fill me-1"></i>Drag a chip onto the diagram</div>
+      <div id="chips-row"></div>
     </div>`;
 
   /* Inject drop zones as foreignObject inside the SVG so they share the same
