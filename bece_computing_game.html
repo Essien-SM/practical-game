@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>BECE Computing Practical Game — Basic 7</title>
+
+<!-- ===== PWA META TAGS ===== -->
+<meta name="application-name" content="BECE Practical Game"/>
+<meta name="description" content="Basic 7 Computing BECE Practical Game — NaCCA Curriculum"/>
+<meta name="theme-color" content="#0a2342"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="BECE Game"/>
+<link rel="manifest" href="manifest.json"/>
+<!-- Apple touch icons (inline SVG fallback encoded) -->
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0a2342;--navy2:#1a3a5c;--gold:#f59e0b;--gold2:#fbbf24;
+  --teal:#0d9488;--teal2:#14b8a6;--green:#16a34a;--red:#dc2626;
+  --sky:#e0f2fe;--cream:#fffbeb;--body-bg:#f0f6ff;
+  --card-bg:#ffffff;--text:#1e293b;--muted:#64748b;--border:#cbd5e1;
+  --radius:14px;--shadow:0 4px 24px rgba(10,35,66,.10);
+}
+*{box-sizing:border-box;}
+body{
+  font-family:'Nunito',sans-serif;background:var(--body-bg);color:var(--text);
+  min-height:100vh;padding-bottom:2rem;
+}
+
+/* ===== HERO HEADER ===== */
+#hero{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,#1e4d8c 100%);
+  padding:2rem 1rem 3.5rem;text-align:center;position:relative;overflow:hidden;
+}
+#hero::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 30px);
+}
+#hero h1{
+  font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,4vw,2rem);
+  color:#fff;font-weight:900;letter-spacing:.04em;position:relative;
+}
+#hero p{color:var(--gold2);font-size:.95rem;font-weight:700;margin-top:.25rem;position:relative;}
+.badge-pill{
+  display:inline-block;background:var(--gold);color:var(--navy);
+  font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:20px;margin:.5rem .2rem 0;
+}
+
+/* ===== PROGRESS STRIP ===== */
+#progress-strip{
+  background:var(--navy);padding:.75rem 1rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25);
+}
+#prog-bar-wrap{flex:1;background:rgba(255,255,255,.15);border-radius:20px;height:10px;min-width:80px;}
+#prog-bar-fill{height:10px;border-radius:20px;background:linear-gradient(90deg,var(--teal2),var(--gold));transition:width .5s ease;}
+#prog-label{color:#fff;font-size:.78rem;font-weight:700;white-space:nowrap;}
+#score-badge{
+  background:var(--gold);color:var(--navy);font-weight:800;
+  font-size:.82rem;padding:4px 14px;border-radius:20px;white-space:nowrap;
+}
+
+/* ===== MAIN CARD ===== */
+#main-wrap{max-width:780px;margin:0 auto;padding:1.5rem 1rem 0;}
+#game-card{
+  background:var(--card-bg);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+#card-header{
+  background:linear-gradient(90deg,var(--navy2),#1e4d8c);
+  padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem;
+}
+#round-type-pill{
+  background:var(--gold);color:var(--navy);font-size:.65rem;font-weight:800;
+  padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;
+}
+#round-title-text{color:#fff;font-weight:800;font-size:1rem;flex:1;}
+#round-num-badge{color:var(--gold2);font-size:.78rem;font-weight:700;white-space:nowrap;}
+#card-body{padding:1.25rem;}
+#round-instructions{
+  background:var(--sky);border-left:4px solid var(--teal2);
+  border-radius:0 8px 8px 0;padding:.6rem 1rem;font-size:.82rem;
+  color:#0369a1;font-weight:600;margin-bottom:1.1rem;
+}
+
+/* ===== FEEDBACK ===== */
+#feedback{
+  border-radius:10px;padding:.7rem 1rem;font-size:.85rem;font-weight:700;
+  text-align:center;display:none;margin:.75rem 0;
+  animation:fadeSlide .3s ease;
+}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+#feedback.correct{background:#dcfce7;color:#15803d;border:1.5px solid #86efac;}
+#feedback.wrong{background:#fee2e2;color:#b91c1c;border:1.5px solid #fca5a5;}
+#feedback.partial{background:#fef9c3;color:#92400e;border:1.5px solid #fde68a;}
+
+/* ===== ACTION BUTTONS ===== */
+.btn-check-ans{
+  background:var(--navy2);color:#fff;border:none;
+  font-weight:800;font-size:.85rem;padding:.55rem 1.5rem;border-radius:10px;
+  transition:all .15s;
+}
+.btn-check-ans:hover{background:var(--navy);transform:translateY(-1px);}
+.btn-next-round{
+  background:var(--gold);color:var(--navy);border:none;
+  font-weight:800;font-size:.85rem;padding:.55rem 1.5rem;border-radius:10px;
+  transition:all .15s;display:none;
+}
+.btn-next-round:hover{background:var(--gold2);}
+
+/* ===== DIAGRAM / LABEL GAME ===== */
+#diagram-wrap{
+  position:relative;background:#f8fafc;border:1.5px solid var(--border);
+  border-radius:10px;overflow:hidden;margin-bottom:.9rem;
+}
+#diagram-wrap svg{display:block;width:100%;height:auto;}
+.drop-zone{
+  position:relative;background:#fff;border:2px dashed var(--border);
+  border-radius:4px;font-size:7px;font-weight:700;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:1px 3px;cursor:default;
+  transition:border-color .15s,background .15s,color .15s;
+  line-height:1.1;min-height:20px;box-sizing:border-box;
+  white-space:nowrap;overflow:hidden;
+}
+.drop-zone.drag-over{border-color:var(--gold);background:#fef9ee;color:var(--navy);}
+.drop-zone.filled{border-style:solid;border-color:var(--teal2);background:#f0fdfa;color:var(--teal);}
+.drop-zone.correct-ans{border-color:var(--green)!important;background:#dcfce7!important;color:#15803d!important;border-style:solid!important;}
+.drop-zone.wrong-ans{border-color:var(--red)!important;background:#fee2e2!important;color:#b91c1c!important;border-style:solid!important;}
+#label-pool{
+  display:flex;flex-wrap:wrap;gap:.4rem;
+  background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:.6rem .75rem;
+}
+#label-pool-title{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+.drag-label{
+  background:var(--navy2);color:#fff;border-radius:7px;
+  font-size:.7rem;font-weight:700;padding:5px 10px;
+  cursor:grab;user-select:none;border:1.5px solid rgba(255,255,255,.15);
+  transition:opacity .15s,transform .1s;
+}
+.drag-label:active{cursor:grabbing;opacity:.75;transform:scale(.97);}
+.drag-label.used{opacity:.25;cursor:not-allowed;pointer-events:none;}
+
+/* ===== STEPS GAME ===== */
+.steps-list{display:flex;flex-direction:column;gap:.45rem;}
+.step-item{
+  display:flex;align-items:center;gap:.6rem;
+  background:#fff;border:1.5px solid var(--border);border-radius:9px;
+  padding:.55rem .85rem;cursor:grab;user-select:none;
+  transition:box-shadow .15s,border-color .15s,background .15s;font-size:.82rem;
+}
+.step-item:active{cursor:grabbing;box-shadow:0 6px 20px rgba(0,0,0,.15);}
+.step-item.dragging{opacity:.45;}
+.step-item.drag-over-step{border-color:var(--gold);box-shadow:0 0 0 3px #fef3c740;}
+.step-item.correct-step{border-color:var(--green);background:#dcfce7;color:#15803d;}
+.step-item.wrong-step{border-color:var(--red);background:#fee2e2;color:#b91c1c;}
+.step-handle{color:#94a3b8;font-size:1.1rem;line-height:1;flex-shrink:0;}
+.step-num{
+  min-width:26px;height:26px;border-radius:50%;
+  background:var(--sky);border:1.5px solid #bae6fd;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:800;color:#0369a1;flex-shrink:0;
+}
+.step-text{flex:1;color:var(--text);font-weight:600;line-height:1.4;}
+
+/* ===== FINAL SCREEN ===== */
+#final-screen{
+  display:none;text-align:center;padding:2.5rem 1.5rem;
+  background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);
+  max-width:520px;margin:2rem auto;
+}
+#final-trophy{font-size:4rem;line-height:1;}
+#final-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;color:var(--navy);font-weight:900;margin:.5rem 0;}
+#final-score-ring{
+  width:120px;height:120px;border-radius:50%;
+  border:6px solid var(--gold);background:var(--cream);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:1rem auto;
+}
+#final-score-num{font-size:2rem;font-weight:900;color:var(--navy);line-height:1;}
+#final-score-max{font-size:.75rem;font-weight:700;color:var(--muted);}
+#final-msg{font-size:.9rem;color:var(--muted);font-weight:600;max-width:340px;margin:.75rem auto 1.25rem;}
+.btn-restart{
+  background:var(--navy2);color:#fff;border:none;font-weight:800;
+  font-size:.9rem;padding:.6rem 2rem;border-radius:10px;transition:all .15s;
+}
+.btn-restart:hover{background:var(--navy);}
+
+/* ===== CATEGORY ICONS ===== */
+.round-icon{font-size:1.1rem;}
+
+/* Touch support */
+@media(max-width:576px){
+  #hero h1{font-size:1.2rem;}
+  .drag-label{font-size:.65rem;padding:4px 8px;}
+  .drop-zone{font-size:.6rem;}
+  .step-item{font-size:.75rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div id="hero">
+  <h1><i class="bi bi-cpu-fill me-2"></i>BECE Practical Game</h1>
+  <p>Basic 7 Computing — NaCCA Curriculum</p>
+  <div>
+    <span class="badge-pill">Label Diagrams</span>
+    <span class="badge-pill">Arrange Steps</span>
+    <span class="badge-pill">8 Rounds</span>
+    <span class="badge-pill">80 Points</span>
+  </div>
+</div>
+
+<!-- PROGRESS STRIP -->
+<div id="progress-strip">
+  <span id="prog-label">Round 1/8</span>
+  <div id="prog-bar-wrap"><div id="prog-bar-fill" style="width:0%"></div></div>
+  <span id="score-badge"><i class="bi bi-star-fill me-1"></i>Score: 0</span>
+</div>
+
+<!-- MAIN -->
+<div id="main-wrap">
+
+  <!-- GAME CARD -->
+  <div id="game-card">
+    <div id="card-header">
+      <span id="round-type-pill">Loading…</span>
+      <span id="round-title-text"></span>
+      <span id="round-num-badge"></span>
+    </div>
+    <div id="card-body">
+      <div id="round-instructions"></div>
+      <div id="round-content"></div>
+      <div id="feedback"></div>
+      <div class="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+        <button class="btn-check-ans" id="btn-check" onclick="checkAnswer()">
+          <i class="bi bi-check2-circle me-1"></i>Check Answer
+        </button>
+        <button class="btn-next-round" id="btn-next" onclick="nextRound()">
+          Next Round <i class="bi bi-arrow-right-circle-fill ms-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL SCREEN -->
+  <div id="final-screen">
+    <div id="final-trophy">🏆</div>
+    <div id="final-title">Game Complete!</div>
+    <div id="final-score-ring">
+      <div id="final-score-num"></div>
+      <div id="final-score-max"></div>
+    </div>
+    <div id="final-msg"></div>
+    <button class="btn-restart" onclick="restartGame()">
+      <i class="bi bi-arrow-repeat me-1"></i>Play Again
+    </button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* =====================================================================
+   GAME DATA
+===================================================================== */
+const ROUNDS = [
+  /* ---- 1. FONT GROUP ---- */
+  {
+    type:'label', icon:'bi-fonts',
+    title:'MS Word — Font Group',
+    instructions:'Drag each label chip to the correct dashed box on the diagram.',
+    svg:`<svg viewBox="0 0 560 185" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+      <!-- outer box -->
+      <rect x="155" y="40" width="250" height="120" rx="7" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+      <!-- top row -->
+      <rect x="163" y="50" width="232" height="42" rx="5" fill="#fff" stroke="#bfdbfe" stroke-width="1"/>
+      <text x="170" y="76" font-size="12" fill="#1e3a5f" font-family="Georgia,serif">Calibri (Body)</text>
+      <text x="310" y="76" font-size="12" fill="#374151">11</text>
+      <text x="332" y="76" font-size="17" fill="#1e40af" font-weight="bold">A</text>
+      <text x="354" y="72" font-size="13" fill="#1e40af">A</text>
+      <text x="370" y="76" font-size="12" fill="#374151">Aa▾</text>
+      <rect x="397" y="56" width="28" height="22" rx="3" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="1"/>
+      <text x="401" y="71" font-size="11" fill="#0c4a6e">Aa</text>
+      <!-- bottom row -->
+      <rect x="163" y="97" width="232" height="38" rx="5" fill="#fff" stroke="#bfdbfe" stroke-width="1"/>
+      <text x="170" y="121" font-size="16" font-weight="bold" fill="#1e3a5f">B</text>
+      <text x="192" y="121" font-size="15" font-style="italic" fill="#1e3a5f">I</text>
+      <text x="210" y="122" font-size="13" fill="#1e3a5f" text-decoration="underline">U▾</text>
+      <text x="236" y="121" font-size="12" fill="#6b7280" text-decoration="line-through">abc</text>
+      <text x="260" y="125" font-size="11" fill="#374151">x</text><text x="268" y="121" font-size="9" fill="#374151">₂</text>
+      <text x="278" y="121" font-size="11" fill="#374151">x</text><text x="286" y="117" font-size="9" fill="#374151">²</text>
+      <text x="299" y="121" font-size="14" fill="#2563eb" font-weight="bold">A</text>
+      <text x="319" y="119" font-size="12" fill="#1e3a5f">ab▾</text>
+      <text x="349" y="121" font-size="14" fill="#dc2626" font-weight="bold">A</text>
+      <text x="365" y="123" font-size="9" fill="#374151">z</text>
+      <!-- label -->
+      <text x="258" y="153" font-size="10" fill="#64748b" text-anchor="middle">Font</text>
+      <!-- connector lines -->
+      <line x1="163" y1="71" x2="108" y2="71" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="172" y1="50" x2="172" y2="37" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="316" y1="50" x2="325" y2="30" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="340" y1="50" x2="358" y2="28" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="397" y1="60" x2="440" y2="32" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="426" y1="68" x2="462" y2="58" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="426" y1="80" x2="462" y2="80" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="426" y1="92" x2="462" y2="98" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="172" y1="110" x2="108" y2="103" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="192" y1="110" x2="108" y2="122" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="216" y1="135" x2="155" y2="155" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="244" y1="135" x2="222" y2="168" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="264" y1="135" x2="262" y2="168" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="286" y1="135" x2="302" y2="168" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="356" y1="110" x2="430" y2="113" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="366" y1="135" x2="430" y2="145" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+    </svg>`,
+    labels:['Font','Font Size','Increase Font','Decrease Font','Change Case','Clear Formatting','Bold','Italic','Underline','Strikethrough','Subscript','Superscript','Font Color','Highlight Color','Text Effect'],
+    dropZones:[
+      {id:'f1', correct:'Font',            x:5,   y:62,  w:95},
+      {id:'f2', correct:'Font Size',       x:120, y:22,  w:90},
+      {id:'f3', correct:'Increase Font',   x:280, y:14,  w:100},
+      {id:'f4', correct:'Decrease Font',   x:315, y:7,   w:105},
+      {id:'f5', correct:'Change Case',     x:395, y:16,  w:105},
+      {id:'f6', correct:'Clear Formatting',x:420, y:41,  w:118},
+      {id:'f7', correct:'Bold',            x:5,   y:95,  w:70},
+      {id:'f8', correct:'Italic',          x:5,   y:115, w:70},
+      {id:'f9', correct:'Underline',       x:100, y:148, w:90},
+      {id:'f10',correct:'Strikethrough',   x:175, y:162, w:102},
+      {id:'f11',correct:'Subscript',       x:218, y:162, w:84},
+      {id:'f12',correct:'Superscript',     x:260, y:162, w:95},
+      {id:'f13',correct:'Font Color',      x:388, y:106, w:95},
+      {id:'f14',correct:'Highlight Color', x:384, y:138, w:108},
+      {id:'f15',correct:'Text Effect',     x:420, y:68,  w:92},
+    ]
+  },
+  /* ---- 2. PARAGRAPH GROUP ---- */
+  {
+    type:'label', icon:'bi-paragraph',
+    title:'MS Word — Paragraph Group',
+    instructions:'Drag each label chip to the correct dashed box on the diagram.',
+    svg:`<svg viewBox="0 0 560 185" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+      <rect x="150" y="55" width="260" height="110" rx="7" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+      <rect x="158" y="63" width="244" height="40" rx="5" fill="#fff" stroke="#bbf7d0" stroke-width="1"/>
+      <text x="164" y="88" font-size="17" fill="#166534">☰</text>
+      <text x="188" y="88" font-size="17" fill="#166534">☰</text>
+      <text x="212" y="88" font-size="17" fill="#166534">☰</text>
+      <text x="238" y="87" font-size="14" fill="#166534">⇤</text>
+      <text x="260" y="87" font-size="14" fill="#166534">⇥</text>
+      <text x="282" y="87" font-size="13" fill="#166534">A↕</text>
+      <text x="310" y="88" font-size="14" fill="#166534">¶</text>
+      <rect x="158" y="108" width="244" height="38" rx="5" fill="#fff" stroke="#bbf7d0" stroke-width="1"/>
+      <text x="164" y="131" font-size="15" fill="#166534">≡</text>
+      <text x="184" y="131" font-size="15" fill="#166534">≡</text>
+      <text x="204" y="131" font-size="15" fill="#166534">≡</text>
+      <text x="224" y="131" font-size="15" fill="#166534">≡</text>
+      <text x="248" y="130" font-size="13" fill="#166534">↕</text>
+      <rect x="268" y="115" width="22" height="22" rx="3" fill="#dcfce7" stroke="#86efac"/>
+      <text x="273" y="130" font-size="11" fill="#166534">⬤</text>
+      <rect x="295" y="115" width="22" height="22" rx="3" fill="#dcfce7" stroke="#86efac"/>
+      <text x="299" y="130" font-size="11" fill="#166534">▦</text>
+      <text x="258" y="163" font-size="10" fill="#64748b" text-anchor="middle">Paragraph</text>
+      <!-- connectors -->
+      <line x1="160" y1="82" x2="105" y2="82" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="164" y1="68" x2="90" y2="50" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="190" y1="63" x2="170" y2="40" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="215" y1="63" x2="220" y2="38" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="265" y1="63" x2="310" y2="36" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="360" y1="76" x2="408" y2="64" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="360" y1="90" x2="408" y2="90" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="160" y1="115" x2="100" y2="115" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="174" y1="146" x2="100" y2="154" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="196" y1="146" x2="155" y2="170" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="216" y1="146" x2="220" y2="172" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="236" y1="146" x2="285" y2="175" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="280" y1="137" x2="355" y2="148" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="310" y1="120" x2="408" y2="112" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+    </svg>`,
+    labels:['Bullets','Numbering','Multilevel List','Decrease Indent','Increase Indent','Sort','Hide/Show Paragraph Marks','Align Left','Center','Align Right','Justify','Line & Paragraph Spacing','Shading','Borders'],
+    dropZones:[
+      {id:'p1', correct:'Bullets',                   x:5,   y:73,  w:90},
+      {id:'p2', correct:'Numbering',                 x:5,   y:42,  w:88},
+      {id:'p3', correct:'Multilevel List',           x:118, y:22,  w:108},
+      {id:'p4', correct:'Decrease Indent',           x:175, y:14,  w:110},
+      {id:'p5', correct:'Increase Indent',           x:262, y:10,  w:108},
+      {id:'p6', correct:'Sort',                      x:370, y:52,  w:75},
+      {id:'p7', correct:'Hide/Show Paragraph Marks', x:365, y:80,  w:155},
+      {id:'p8', correct:'Align Left',                x:5,   y:106, w:85},
+      {id:'p9', correct:'Center',                    x:5,   y:143, w:72},
+      {id:'p10',correct:'Align Right',               x:100, y:161, w:88},
+      {id:'p11',correct:'Justify',                   x:238, y:167, w:72},
+      {id:'p12',correct:'Line & Paragraph Spacing',  x:310, y:139, w:158},
+      {id:'p13',correct:'Shading',                   x:170, y:163, w:74},
+      {id:'p14',correct:'Borders',                   x:366, y:103, w:72},
+    ]
+  },
+  /* ---- 3. EXCEL INTERFACE ---- */
+  {
+    type:'label', icon:'bi-file-earmark-spreadsheet',
+    title:'MS Excel — Interface Parts',
+    instructions:'Drag each label chip to the correct dashed box on the diagram.',
+    svg:`<svg viewBox="0 0 560 232" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+      <rect x="120" y="22" width="320" height="180" rx="5" fill="#fff" stroke="#d1d5db" stroke-width="1.5"/>
+      <rect x="120" y="22" width="320" height="22" rx="5 5 0 0" fill="#217346"/>
+      <text x="245" y="37" font-size="10" fill="#fff" text-anchor="middle">Book1 — Excel</text>
+      <text x="126" y="37" font-size="9" fill="#90ee90">✱ ✎ ✔</text>
+      <text x="415" y="37" font-size="10" fill="#fff">— □ ✕</text>
+      <rect x="120" y="44" width="320" height="20" fill="#f3f4f6" stroke="#e5e7eb" stroke-width=".5"/>
+      <text x="125" y="58" font-size="8" fill="#374151">File  Home  Insert  Page Layout  Formulas  Data  Review  View</text>
+      <rect x="120" y="64" width="320" height="18" fill="#fafafa" stroke="#e5e7eb" stroke-width=".5"/>
+      <text x="125" y="76" font-size="8" fill="#374151">A1</text>
+      <text x="155" y="76" font-size="8" fill="#374151">fx</text>
+      <rect x="120" y="82" width="320" height="16" fill="#e8f5e9" stroke="#c8e6c9" stroke-width=".5"/>
+      <text x="148" y="93" font-size="8" fill="#555">A</text>
+      <text x="196" y="93" font-size="8" fill="#555">B</text>
+      <text x="244" y="93" font-size="8" fill="#555">C</text>
+      <text x="292" y="93" font-size="8" fill="#555">D</text>
+      <text x="340" y="93" font-size="8" fill="#555">E</text>
+      <rect x="120" y="98" width="22" height="90" fill="#e8f5e9" stroke="#c8e6c9" stroke-width=".5"/>
+      <text x="124" y="112" font-size="7" fill="#555">1</text>
+      <text x="124" y="127" font-size="7" fill="#555">2</text>
+      <text x="124" y="142" font-size="7" fill="#555">3</text>
+      <text x="124" y="157" font-size="7" fill="#555">4</text>
+      <text x="124" y="172" font-size="7" fill="#555">5</text>
+      <rect x="142" y="98" width="288" height="90" fill="#fff" stroke="#e5e7eb" stroke-width=".5"/>
+      <rect x="142" y="98" width="45" height="14" fill="#dbeafe" stroke="#93c5fd" stroke-width=".8"/>
+      <rect x="428" y="98" width="12" height="90" fill="#f3f4f6" stroke="#e5e7eb" stroke-width=".5"/>
+      <rect x="120" y="188" width="295" height="14" fill="#f9fafb" stroke="#e5e7eb" stroke-width=".5"/>
+      <text x="127" y="199" font-size="8" fill="#374151">  Sheet1</text>
+      <text x="162" y="199" font-size="8" fill="#9ca3af">  Sheet2</text>
+      <text x="188" y="199" font-size="8" fill="#9ca3af">  Sheet3</text>
+      <rect x="415" y="188" width="25" height="14" fill="#f9fafb" stroke="#e5e7eb" stroke-width=".5"/>
+      <text x="418" y="199" font-size="8" fill="#374151">100%</text>
+      <!-- connectors left -->
+      <line x1="120" y1="32" x2="65" y2="14" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="120" y1="54" x2="65" y2="48" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="120" y1="73" x2="65" y2="68" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="130" y1="22" x2="80" y2="8" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="142" y1="105" x2="65" y2="98" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="120" y1="143" x2="65" y2="140" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="120" y1="192" x2="65" y2="195" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <!-- connectors right -->
+      <line x1="440" y1="28" x2="490" y2="18" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="245" y1="22" x2="245" y2="8" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="440" y1="68" x2="490" y2="58" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="440" y1="90" x2="490" y2="84" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="440" y1="115" x2="490" y2="112" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="440" y1="145" x2="490" y2="143" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="295" y1="202" x2="295" y2="218" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="160" y1="202" x2="140" y2="218" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="380" y1="202" x2="390" y2="216" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="427" y1="195" x2="490" y2="190" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
+    </svg>`,
+    labels:['Quick Access Toolbar','Title Bar','Control Box','File Button','Formula Bar','Column Headings','Name Box','Vertical Scroll Bar','Active Cell','Worksheet Area','Row Headings','Horizontal Scroll Bar','Status Bar','Worksheet Tabs','Page View Buttons','Zoom Slider'],
+    dropZones:[
+      {id:'e1', correct:'Quick Access Toolbar',  x:0,   y:3,   w:130},
+      {id:'e2', correct:'Title Bar',             x:196, y:0,   w:84},
+      {id:'e3', correct:'Control Box',           x:448, y:0,   w:110},
+      {id:'e4', correct:'File Button',           x:0,   y:40,  w:84},
+      {id:'e5', correct:'Formula Bar',           x:448, y:49,  w:110},
+      {id:'e6', correct:'Column Headings',       x:448, y:73,  w:110},
+      {id:'e7', correct:'Name Box',              x:0,   y:59,  w:84},
+      {id:'e8', correct:'Vertical Scroll Bar',   x:448, y:103, w:115},
+      {id:'e9', correct:'Active Cell',           x:0,   y:87,  w:88},
+      {id:'e10',correct:'Worksheet Area',        x:448, y:132, w:110},
+      {id:'e11',correct:'Row Headings',          x:0,   y:130, w:98},
+      {id:'e12',correct:'Horizontal Scroll Bar', x:340, y:208, w:132},
+      {id:'e13',correct:'Status Bar',            x:0,   y:183, w:84},
+      {id:'e14',correct:'Worksheet Tabs',        x:95,  y:210, w:104},
+      {id:'e15',correct:'Page View Buttons',     x:252, y:210, w:118},
+      {id:'e16',correct:'Zoom Slider',           x:448, y:179, w:110},
+    ]
+  },
+  /* ---- 4. STEPS: FOLDER CREATION ---- */
+  {
+    type:'steps', icon:'bi-folder-plus',
+    title:'Creating Folders in Windows',
+    instructions:'Drag the steps into the correct order (1 = first, last = finish).',
+    steps:[
+      'Right-click on an empty area of the Desktop',
+      'Point to "New" in the context menu',
+      'Click "Folder" from the sub-menu',
+      'Type the folder name "Basic7_Computing" and press Enter',
+      'Double-click the new folder to open it',
+      'Right-click inside → New → Folder → name it "Notes" → Enter',
+      'Repeat to create folders named "Assignments" and "Practicals"',
+    ]
+  },
+  /* ---- 5. STEPS: FIND & REPLACE ---- */
+  {
+    type:'steps', icon:'bi-search',
+    title:'Find & Replace in MS Word',
+    instructions:'Drag the steps into the correct order (1 = first, last = finish).',
+    steps:[
+      'Open your document in Microsoft Word',
+      'Click the "Home" tab in the Ribbon',
+      'Click "Replace" in the Editing group (or press Ctrl + H)',
+      'In "Find what", type the word to find (e.g. "computer")',
+      'In "Replace with", type the new word (e.g. "device")',
+      'Click "Replace All" to replace every occurrence',
+      'Click "OK" on the confirmation message, then close the dialog',
+    ]
+  },
+  /* ---- 6. STEPS: EMAIL WITH ATTACHMENT ---- */
+  {
+    type:'steps', icon:'bi-envelope-paper',
+    title:'Sending an Email with an Attachment',
+    instructions:'Drag the steps into the correct order (1 = first, last = finish).',
+    steps:[
+      'Open your email application (e.g. Gmail or Outlook)',
+      'Click "Compose" or "New Email"',
+      'Type the recipient\'s email address in the "To" field',
+      'Add a classmate\'s address in the "CC" field',
+      'Type a clear subject line in the "Subject" field',
+      'Click the attachment icon (paperclip) and select your file',
+      'Write your message in the body area',
+      'Click "Send" to deliver the email',
+    ]
+  },
+  /* ---- 7. STEPS: SLIDE MASTER ---- */
+  {
+    type:'steps', icon:'bi-easel',
+    title:'Applying Slide Master in PowerPoint',
+    instructions:'Drag the steps into the correct order (1 = first, last = finish).',
+    steps:[
+      'Open your presentation in Microsoft PowerPoint',
+      'Click the "View" tab in the Ribbon',
+      'Click "Slide Master" in the Master Views group',
+      'Select the top (parent) master slide in the left panel',
+      'Set the background colour and choose a font for the master',
+      'Click "Close Master View" in the Slide Master tab',
+      'Verify all slides now share the same background and font',
+    ]
+  },
+  /* ---- 8. STEPS: MARGINS & ORIENTATION ---- */
+  {
+    type:'steps', icon:'bi-printer',
+    title:'Setting Margins & Orientation in Excel',
+    instructions:'Drag the steps into the correct order (1 = first, last = finish).',
+    steps:[
+      'Open your spreadsheet in Microsoft Excel',
+      'Click the "Page Layout" tab in the Ribbon',
+      'Click "Orientation" and select "Landscape"',
+      'Click "Margins" and choose "Custom Margins…"',
+      'Set your preferred margin values and click "OK"',
+      'Click "Print Preview" to confirm the page layout',
+      'Print the spreadsheet if the preview looks correct',
+    ]
+  },
+];
+
+/* =====================================================================
+   STATE
+===================================================================== */
+let round=0, score=0, answered=false;
+let dragLabel=null, dragSrcStepIdx=-1;
+let stepOrder=[];
+
+/* =====================================================================
+   INIT
+===================================================================== */
+function init(){
+  round=0; score=0; answered=false;
+  document.getElementById('final-screen').style.display='none';
+  document.getElementById('game-card').style.display='block';
+  renderRound();
+}
+
+function renderRound(){
+  const r=ROUNDS[round];
+  answered=false;
+  document.getElementById('feedback').style.display='none';
+  document.getElementById('btn-check').style.display='inline-block';
+  document.getElementById('btn-next').style.display='none';
+  document.getElementById('prog-label').textContent=`Round ${round+1}/${ROUNDS.length}`;
+  document.getElementById('score-badge').innerHTML=`<i class="bi bi-star-fill me-1"></i>Score: ${score}`;
+  document.getElementById('prog-bar-fill').style.width=`${(round/ROUNDS.length)*100}%`;
+  document.getElementById('round-type-pill').innerHTML=
+    r.type==='label'
+      ? `<i class="bi ${r.icon} me-1"></i>Label the Diagram`
+      : `<i class="bi ${r.icon} me-1"></i>Arrange the Steps`;
+  document.getElementById('round-title-text').textContent=r.title;
+  document.getElementById('round-num-badge').textContent=`${round+1} / ${ROUNDS.length}`;
+  document.getElementById('round-instructions').textContent=r.instructions;
+  if(r.type==='label') renderLabelRound(r);
+  else renderStepsRound(r);
+}
+
+/* =====================================================================
+   LABEL ROUND
+===================================================================== */
+function renderLabelRound(r){
+  const content=document.getElementById('round-content');
+  const shuffled=[...r.labels].sort(()=>Math.random()-.5);
+  content.innerHTML=`
+    <div id="diagram-wrap">${r.svg}</div>
+    <div id="label-pool">
+      <div id="label-pool-title"><i class="bi bi-tags-fill me-1"></i>Label chips — drag to diagram</div>
+      <div id="chips-row" style="display:flex;flex-wrap:wrap;gap:.4rem;"></div>
+    </div>`;
+
+  /* Inject drop zones as foreignObject inside the SVG so they share the same
+     coordinate system as the connector lines — no scaling mismatch possible */
+  const svg=document.querySelector('#diagram-wrap svg');
+  const NS='http://www.w3.org/2000/svg';
+  const BOX_H=20; // height of each drop-zone box in SVG units
+
+  r.dropZones.forEach(dz=>{
+    const fo=document.createElementNS(NS,'foreignObject');
+    fo.setAttribute('x', dz.x);
+    fo.setAttribute('y', dz.y);
+    fo.setAttribute('width', dz.w);
+    fo.setAttribute('height', BOX_H);
+    fo.setAttribute('overflow','visible');
+
+    const el=document.createElement('div');
+    el.className='drop-zone'; el.id=dz.id; el.dataset.correct=dz.correct;
+    el.style.cssText=`width:${dz.w}px;height:${BOX_H}px;font-size:7px;min-height:${BOX_H}px;border-radius:4px;`;
+    el.textContent='Drop here';
+
+    /* Desktop drag */
+    el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over');});
+    el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
+    el.addEventListener('drop',e=>{
+      e.preventDefault(); el.classList.remove('drag-over');
+      if(!dragLabel) return;
+      returnFilledLabel(el);
+      el.textContent=dragLabel; el.dataset.label=dragLabel; el.classList.add('filled');
+      document.querySelector(`.drag-label[data-val="${dragLabel}"]`)?.remove();
+      dragLabel=null;
+    });
+    /* Touch */
+    el.addEventListener('touchend',e=>{
+      e.preventDefault();
+      if(!window._touchDragging) return;
+      const chip=window._touchDragging;
+      returnFilledLabel(el);
+      el.textContent=chip.dataset.val; el.dataset.label=chip.dataset.val; el.classList.add('filled');
+      chip.remove();
+      cleanTouchDrag();
+    },{passive:false});
+
+    fo.appendChild(el);
+    svg.appendChild(fo);
+  });
+
+  /* Chips */
+  const row=document.getElementById('chips-row');
+  shuffled.forEach(lbl=>{
+    row.appendChild(makeChip(lbl));
+  });
+}
+
+function returnFilledLabel(el){
+  const old=el.dataset.label;
+  if(old){
+    document.getElementById('chips-row').appendChild(makeChip(old));
+    el.dataset.label=''; el.classList.remove('filled');
+  }
+}
+
+function makeChip(lbl){
+  const el=document.createElement('div');
+  el.className='drag-label'; el.draggable=true;
+  el.textContent=lbl; el.dataset.val=lbl;
+  el.addEventListener('dragstart',()=>{dragLabel=lbl; el.dataset.val=lbl;});
+  el.addEventListener('dragend',()=>{ dragLabel=null; });
+  /* Touch drag */
+  el.addEventListener('touchstart',e=>{
+    e.stopPropagation();
+    window._touchDragging=el;
+    const ghost=el.cloneNode(true);
+    ghost.style.cssText='position:fixed;opacity:.75;pointer-events:none;z-index:9999;background:#1a3a5c;color:#fff;padding:5px 10px;border-radius:7px;font-size:.7rem;font-weight:700;';
+    document.body.appendChild(ghost);
+    window._touchGhost=ghost;
+  },{passive:true});
+  el.addEventListener('touchmove',e=>{
+    const t=e.touches[0];
+    if(window._touchGhost){
+      window._touchGhost.style.left=(t.clientX-30)+'px';
+      window._touchGhost.style.top=(t.clientY-14)+'px';
+    }
+    e.preventDefault();
+  },{passive:false});
+  el.addEventListener('touchend',e=>{
+    cleanTouchDrag();
+    const t=e.changedTouches[0];
+    const target=document.elementFromPoint(t.clientX,t.clientY);
+    const dz=target?.closest('.drop-zone');
+    if(dz){
+      returnFilledLabel(dz);
+      dz.textContent=lbl; dz.dataset.label=lbl; dz.classList.add('filled');
+      el.remove();
+    }
+  },{passive:true});
+  return el;
+}
+
+function cleanTouchDrag(){
+  window._touchGhost?.remove(); window._touchGhost=null;
+  window._touchDragging=null;
+}
+
+/* =====================================================================
+   STEPS ROUND
+===================================================================== */
+function renderStepsRound(r){
+  stepOrder=[...r.steps].sort(()=>Math.random()-.5);
+  const content=document.getElementById('round-content');
+  content.innerHTML='<div class="steps-list" id="steps-list"></div>';
+  buildStepItems();
+}
+
+function buildStepItems(){
+  const list=document.getElementById('steps-list');
+  list.innerHTML='';
+  stepOrder.forEach((step,i)=>{
+    const el=document.createElement('div');
+    el.className='step-item'; el.draggable=true; el.dataset.idx=i;
+    el.innerHTML=`<span class="step-handle"><i class="bi bi-grip-vertical"></i></span>
+      <span class="step-num">${i+1}</span>
+      <span class="step-text">${step}</span>`;
+    /* Desktop drag */
+    el.addEventListener('dragstart',()=>{ dragSrcStepIdx=i; el.classList.add('dragging'); });
+    el.addEventListener('dragend',()=>{ el.classList.remove('dragging'); });
+    el.addEventListener('dragover',e=>{ e.preventDefault(); el.classList.add('drag-over-step'); });
+    el.addEventListener('dragleave',()=>el.classList.remove('drag-over-step'));
+    el.addEventListener('drop',e=>{
+      e.preventDefault(); el.classList.remove('drag-over-step');
+      const t=parseInt(el.dataset.idx);
+      if(dragSrcStepIdx===t) return;
+      const moved=stepOrder.splice(dragSrcStepIdx,1)[0];
+      stepOrder.splice(t,0,moved);
+      buildStepItems();
+    });
+    /* Touch drag for steps */
+    el.addEventListener('touchstart',()=>{ dragSrcStepIdx=i; },{passive:true});
+    el.addEventListener('touchend',e=>{
+      const t=e.changedTouches[0];
+      const target=document.elementFromPoint(t.clientX,t.clientY)?.closest('.step-item');
+      if(target&&target!==el){
+        const tidx=parseInt(target.dataset.idx);
+        const moved=stepOrder.splice(dragSrcStepIdx,1)[0];
+        stepOrder.splice(tidx,0,moved);
+        buildStepItems();
+      }
+    },{passive:true});
+    list.appendChild(el);
+  });
+}
+
+/* =====================================================================
+   CHECK ANSWER
+===================================================================== */
+function checkAnswer(){
+  if(answered) return;
+  answered=true;
+  const r=ROUNDS[round];
+  const fb=document.getElementById('feedback');
+  let correct=0,total=0;
+
+  if(r.type==='label'){
+    r.dropZones.forEach(dz=>{
+      total++;
+      const el=document.getElementById(dz.id);
+      if(el.dataset.label===dz.correct){ correct++; el.classList.add('correct-ans'); }
+      else { el.classList.add('wrong-ans'); el.title='✓ '+dz.correct; }
+    });
+  } else {
+    const r2=ROUNDS[round];
+    stepOrder.forEach((step,i)=>{
+      total++;
+      const el=document.querySelectorAll('.step-item')[i];
+      if(step===r2.steps[i]){ correct++; el.classList.add('correct-step'); }
+      else el.classList.add('wrong-step');
+    });
+  }
+  const pct=Math.round((correct/total)*100);
+  const pts=Math.round((correct/total)*10);
+  score+=pts;
+  document.getElementById('score-badge').innerHTML=`<i class="bi bi-star-fill me-1"></i>Score: ${score}`;
+  if(pct===100){
+    fb.className='feedback correct'; fb.innerHTML=`<i class="bi bi-check-circle-fill me-1"></i>Perfect! All ${total} correct! +${pts} points`;
+  } else if(pct>=60){
+    fb.className='feedback partial'; fb.innerHTML=`<i class="bi bi-exclamation-circle-fill me-1"></i>${correct}/${total} correct. +${pts} points — review the highlighted ones!`;
+  } else {
+    fb.className='feedback wrong'; fb.innerHTML=`<i class="bi bi-x-circle-fill me-1"></i>Only ${correct}/${total} correct. Study the diagram/steps and try again!`;
+  }
+  fb.style.display='block';
+  document.getElementById('btn-check').style.display='none';
+  document.getElementById('btn-next').style.display='inline-block';
+}
+
+/* =====================================================================
+   NAVIGATION
+===================================================================== */
+function nextRound(){
+  round++;
+  if(round>=ROUNDS.length){ showFinal(); return; }
+  renderRound();
+}
+
+function showFinal(){
+  document.getElementById('game-card').style.display='none';
+  document.getElementById('prog-bar-fill').style.width='100%';
+  document.getElementById('prog-label').textContent='Completed!';
+  const max=ROUNDS.length*10;
+  const pct=Math.round((score/max)*100);
+  const fs=document.getElementById('final-screen');
+  fs.style.display='block';
+  document.getElementById('final-score-num').textContent=score;
+  document.getElementById('final-score-max').textContent=`out of ${max}`;
+  document.getElementById('final-trophy').textContent=pct>=90?'🏆':pct>=70?'🎖️':pct>=50?'📚':'🎯';
+  document.getElementById('final-msg').textContent=
+    pct>=90?'Outstanding! You are fully prepared for BECE practicals!':
+    pct>=70?'Well done! A little more practice and you will ace it!':
+    pct>=50?'Good effort! Review the diagrams and steps more carefully.':
+    'Keep going — study the notes and try again. You can do it!';
+}
+
+function restartGame(){ init(); }
+
+/* Start */
+init();
+
+/* ===== SERVICE WORKER REGISTRATION ===== */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(reg=>console.log('SW registered:', reg.scope))
+      .catch(err=>console.log('SW failed:', err));
+  });
+}
+
+/* ===== PWA INSTALL PROMPT ===== */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  // Show install banner after a short delay
+  setTimeout(()=>{
+    if(deferredPrompt){
+      const banner=document.createElement('div');
+      banner.id='install-banner';
+      banner.innerHTML=`
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
+          <i class="bi bi-phone-fill" style="font-size:1.4rem;color:#f59e0b;"></i>
+          <span style="flex:1;font-size:.82rem;font-weight:700;color:#fff;">Install this game as an app on your phone!</span>
+          <button id="btn-install" style="background:#f59e0b;color:#0a2342;border:none;font-weight:800;font-size:.78rem;padding:6px 14px;border-radius:8px;cursor:pointer;">Install</button>
+          <button id="btn-dismiss" style="background:transparent;color:#94a3b8;border:none;font-size:1.1rem;cursor:pointer;padding:0 4px;">✕</button>
+        </div>`;
+      banner.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#1a3a5c;padding:.75rem 1rem;z-index:9999;box-shadow:0 -4px 20px rgba(0,0,0,.3);';
+      document.body.appendChild(banner);
+      document.getElementById('btn-install').addEventListener('click',()=>{
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(()=>{ banner.remove(); deferredPrompt=null; });
+      });
+      document.getElementById('btn-dismiss').addEventListener('click',()=>banner.remove());
+    }
+  }, 3000);
+});
+</script>
+</body>
+</html>

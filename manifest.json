@@ -1,0 +1,35 @@
+{
+  "name": "BECE Computing Practical Game",
+  "short_name": "BECE Game",
+  "description": "Basic 7 Computing BECE Practical Game — NaCCA Curriculum",
+  "start_url": "./bece_computing_game.html",
+  "display": "standalone",
+  "background_color": "#0a2342",
+  "theme_color": "#0a2342",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "categories": ["education", "games"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Start Game",
+      "short_name": "Play",
+      "description": "Jump straight into the game",
+      "url": "./bece_computing_game.html"
+    }
+  ]
+}
